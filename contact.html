@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - Hope Foundation</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #fff3e0);
+      color: #2c3e50;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    /* Navbar */
+    nav {
+      background-color: #2c3e50;
+      padding: 1rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: flex-start;
+      list-style: none;
+      padding-left: 2rem;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      position: relative;
+      transition: color 0.3s;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      background: #e74c3c;
+      left: 0;
+      bottom: -5px;
+      transition: 0.3s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    nav a:hover {
+      color: #e74c3c;
+    }
+
+    /* Contact Section */
+    .contact-container {
+      margin-top: 7rem;
+      padding: 4rem 2rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease;
+    }
+
+    .contact-container h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: #ea742a;
+    }
+
+    .contact-container p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      color: #555;
+    }
+
+    .contact-container form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .contact-container input,
+    .contact-container textarea {
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      transition: all 0.3s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .contact-container input:focus,
+    .contact-container textarea:focus {
+      border-color: #eb7616;
+      box-shadow: 0 4px 12px rgba(66, 205, 236, 0.3);
+      outline: none;
+    }
+
+    .contact-container button {
+      padding: 1rem;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #e66910, #dd6d11eb);
+      color: white;
+      font-size: 1.2rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .contact-container button:hover {
+      background: linear-gradient(45deg, #b63f11, #ead413);
+      transform: scale(1.05);
+    }
+
+    /* Chatbot Floating Button */
+    .chatbot-button {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: linear-gradient(45deg, #df5a2e, #e98008);
+      color: white;
+      border: none;
+      padding: 1rem;
+      border-radius: 50%;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s;
+      z-index: 999;
+    }
+
+    .chatbot-button:hover {
+      transform: scale(1.1);
+    }
+
+    .chatbot-container {
+      position: fixed;
+      bottom: 90px;
+      right: 2rem;
+      width: 340px;
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      display: none;
+      flex-direction: column;
+      height: 480px;
+      overflow: hidden;
+      z-index: 1000;
+      animation: slideUp 0.5s ease;
+    }
+
+    .chat-header {
+      background: linear-gradient(45deg, #2c3e50, #34495e);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .chat-messages {
+      flex-grow: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 1rem;
+      border-top: 1px solid #eee;
+      gap: 0.5rem;
+      background: #fff;
+    }
+
+    .chat-input input {
+      flex-grow: 1;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .chat-input button {
+      padding: 0.8rem;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .chat-input button:hover {
+      background-color: #de5c29;
+    }
+
+    .user-message,
+    .bot-message {
+      margin-bottom: 1rem;
+      line-height: 1.4;
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+
+    .user-message {
+      background: #42cdec;
+      color: white;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .bot-message {
+      background: #ecf0f1;
+      color: #2c3e50;
+      margin-right: auto;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #2c3e50;
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="donate.html">Donate</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="Programe.html">Programe</a></li>
+    
+  </ul>
+</nav>
+
+<!-- Contact Form -->
+<div class="contact-container">
+  <h1>Contact Us</h1>
+  <p>Have any questions? Feel free to reach out to us!</p>
+  <form id="contact-form" onsubmit="return validateContactForm(event)">
+    <input type="text" name="name" placeholder="Your Name" required minlength="2" maxlength="100">
+    <input type="email" name="email" placeholder="Your Email" required maxlength="100">
+    <textarea name="message" rows="5" placeholder="Your Message" required minlength="10" maxlength="1000"></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</div>
+
+<div id="response-message" style="display: none; text-align: center; margin-top: 20px; padding: 10px; border-radius: 5px;"></div>
+
+<!-- Chatbot -->
+<button class="chatbot-button" onclick="toggleChat()">💬</button>
+<div class="chatbot-container" id="chatbot">
+  <div class="chat-header">Hope Foundation Bot</div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input">
+    <input type="text" id="chat-input" placeholder="Ask me something..." onkeypress="handleKeyPress(event)">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 Hope Foundation. All rights reserved.</p>
+  <p>Contact us via email: <a href="mailto:farhanmohd21@gmail.com">farhanmohd21@gmail.com</a></p>
+  <p>Phone: <a href="tel:+919972664624">+91 9972664624</a></p>
+</footer>
+
+<script>
+    // Toggle Chatbot
+    function toggleChat() {
+      const chatbox = document.getElementById("chatbot");
+      chatbox.style.display = chatbox.style.display === "flex" ? "none" : "flex";
+      if (chatbox.style.display === "flex") {
+        document.getElementById("chat-input").focus();
+        loadChatHistory(); // Load old chat
+      }
+    }
+  
+    // Enter Key Handler
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
+      }
+    }
+  
+    // Save Chat
+    function saveChatHistory() {
+      const chatBox = document.getElementById("chat-messages");
+      localStorage.setItem("chatHistory", chatBox.innerHTML);
+    }
+  
+    // Load Chat
+    function loadChatHistory() {
+      const chatBox = document.getElementById("chat-messages");
+      chatBox.innerHTML = localStorage.getItem("chatHistory") || "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  
+    // Send Message
+    function sendMessage() {
+      const inputField = document.getElementById("chat-input");
+      const message = inputField.value.trim();
+      if (!message) return;
+  
+      const chatBox = document.getElementById("chat-messages");
+  
+      // User bubble
+      chatBox.innerHTML += `<div class="user-message">${message}</div>`;
+      inputField.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+  
+      saveChatHistory();
+  
+      // Bot typing simulation
+      setTimeout(() => {
+        const botBubble = document.createElement("div");
+        botBubble.className = "bot-message typing";
+        botBubble.textContent = "...";
+        chatBox.appendChild(botBubble);
+        chatBox.scrollTop = chatBox.scrollHeight;
+  
+        // Typing animation
+        setTimeout(() => {
+          const reply = generateAIResponse(message);
+          typeText(botBubble, reply);
+        }, 500);
+  
+      }, 500);
+    }
+  
+    // Typing Effect
+    function typeText(element, text, i = 0) {
+      if (i < text.length) {
+        element.textContent = text.substring(0, i + 1);
+        setTimeout(() => typeText(element, text, i + 1), 30); // speed
+      } else {
+        element.classList.remove("typing");
+        const chatBox = document.getElementById("chat-messages");
+        chatBox.scrollTop = chatBox.scrollHeight;
+        saveChatHistory();
+      }
+    }
+  
+    // Simple AI Response with Features
+    function generateAIResponse(userMessage) {
+      const msg = userMessage.toLowerCase();
+  
+      // Greetings
+      if (["hi", "hello", "hey"].some(word => msg.includes(word))) {
+        const greetings = ["Hi there! 👋", "Hey friend! 😊", "Hello, how can I help you today? 🌼"];
+        return greetings[Math.floor(Math.random() * greetings.length)];
+      }
+  
+      // Time & Date
+      if (msg.includes("time")) {
+        const now = new Date();
+        return `Current time is ${now.toLocaleTimeString()} ⏰`;
+      }
+  
+      if (msg.includes("date")) {
+        const now = new Date();
+        return `Today is ${now.toLocaleDateString()} 📅`;
+      }
+  
+      // Jokes
+      if (msg.includes("joke")) {
+        const jokes = [
+          "Why don't scientists trust atoms? Because they make up everything! 😂",
+          "Why did the math book look sad? Because it had too many problems. 🤣",
+          "Why don't skeletons fight each other? They don't have the guts! 😄"
+        ];
+        return jokes[Math.floor(Math.random() * jokes.length)];
+      }
+  
+      // Motivation
+      if (msg.includes("motivate") || msg.includes("quote")) {
+        const quotes = [
+          "Believe in yourself — you're stronger than you think! 💪",
+          "Every day is a second chance. 🌟",
+          "You can do it — keep going! 🚀"
+        ];
+        return quotes[Math.floor(Math.random() * quotes.length)];
+      }
+  
+      // Website-specific (Donations)
+      if (msg.includes("donate") || msg.includes("donation")) {
+        return "You can donate by visiting our Donations page. 💖 Every contribution helps! [Go to Donations](#)";
+      }
+  
+      // About Us
+      if (msg.includes("about")) {
+        return "We are a nonprofit organization dedicated to making a difference! 🌍 Learn more on our About page. [About Us](#)";
+      }
+  
+      // Programs
+      if (msg.includes("program") || msg.includes("activities")) {
+        return "We offer various programs to support the community! 🎯 Check them out on our Programs page. [Our Programs](#)";
+      }
+  
+      // Default
+      return "Thank you for reaching out! We'll get back to you shortly. 🙏";
+    }
+
+    function validateContactForm(event) {
+      event.preventDefault();
+      const form = event.target;
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const message = form.message.value.trim();
+      const responseDiv = document.getElementById('response-message');
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showResponse("Please enter a valid email address", "error");
+        return false;
+      }
+
+      // Name validation
+      if (name.length < 2 || name.length > 100) {
+        showResponse("Name must be between 2 and 100 characters", "error");
+        return false;
+      }
+
+      // Message validation
+      if (message.length < 10 || message.length > 1000) {
+        showResponse("Message must be between 10 and 1000 characters", "error");
+        return false;
+      }
+
+      // Process form submission
+      try {
+        // Simulated form submission
+        console.log("Submitting form:", { name, email, message });
+        showResponse("Thank you! Your message has been sent successfully.", "success");
+        form.reset();
+      } catch (error) {
+        console.error("Form submission error:", error);
+        showResponse("There was an error sending your message. Please try again.", "error");
+      }
+      return false;
+    }
+
+    function showResponse(message, type) {
+      const responseDiv = document.getElementById('response-message');
+      responseDiv.style.display = 'block';
+      responseDiv.style.backgroundColor = type === 'success' ? '#4CAF50' : '#f44336';
+      responseDiv.style.color = 'white';
+      responseDiv.innerText = message;
+      
+      // Hide message after 5 seconds
+      setTimeout(() => {
+        responseDiv.style.display = 'none';
+      }, 5000);
+    }
+  </script>
+  
+
+</body>
+</html>
