@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0">
+    <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+
+    body {
+      background: url('donate.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #f48a18;
+      line-height: 1.6;
+    }
+
+    nav {
+      background-color: #2c3e50;
+      padding: 1rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: flex-start;
+      list-style: none;
+      padding-left: 2rem;
+      gap: 2rem;
+    }
+
+    nav li {
+      display: inline-block;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      background: #e77e3c;
+      left: 0;
+      bottom: -5px;
+      transition: 0.3s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    nav a:hover {
+      color: #e74c3c;
+    }
+
+    .donate {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80vh;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      margin: 50px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+      flex-direction: column;
+    }
+
+    .donate_container h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      color: hsla(19, 98%, 60%, 0.983);
+    }
+
+    .donate_container p {
+      font-size: 1.2em;
+      color: #f5f1f1;
+      margin: 10px 0;
+    }
+
+    .payment-form {
+      margin-top: 20px;
+      color:burlywood;
+    }
+
+    .payment-form input, .payment-form select {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      border-radius: 10px;
+      border: none;
+    }
+
+    .payment-form button {
+      margin-top: 20px;
+      padding: 15px 30px;
+      background-color: hwb(13 21% 1%);
+      color: #000;
+      text-decoration: none;
+      font-size: 1.2em;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .payment-form button:hover {
+      background-color: #ff3b3b;
+      transform: scale(1.1);
+    }
+
+    footer {
+      background-color: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+  </style>
+
+  <title>Hope foundation | Donate</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+</head>
+
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="donate.html">Donate</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="Programe.html">Programe</a></li>
+    </ul>
+  </nav>
+
+  <div class="donate">
+    <div class="donate_container">
+      <h1>Let's Make a Change Together!</h1>
+      <p>The greatest use of a life is to spend it on something that will outlast it.</p>
+      <p class="second">Any help or donation,<br>no matter how big or small,<br> will be whole-heartedly and deeply appreciated.</p>
+
+      <form class="payment-form" onsubmit="return validateForm(event)">
+        <input type="text" name="name" placeholder="Your Name" required maxlength="100" minlength="2">
+        <input type="email" name="email" placeholder="Your Email" required maxlength="100">
+        <input type="number" name="amount" placeholder="Donation Amount (INR)" required min="100" max="1000000">
+
+        <select name="payment_method" required>
+          <option value="" disabled selected>Select Payment Method</option>
+          <option value="upi">UPI (Scan & Pay)</option>
+          <option value="bank">Bank Transfer</option>
+        </select>
+
+        <!-- UPI QR Code Placeholder -->
+        <div id="upiSection" style="display:none; margin-top: 20px;">
+          <img src="Qr.JPG" alt="Scan UPI QR to Pay" style="width:200px; border-radius: 10px;">
+          <p style="color: #f5f1f1; margin-top: 10px;">Scan to pay using any UPI app.</p>
+        </div>
+        <!-- Bank Transfer Placeholder -->
+        <div id="bankSection" style="display:none; margin-top: 20px;">
+          <p style="color: #f5f1f1;">Bank: ABC Bank<br>Account No: 1234567890<br>IFSC: ABCD0123456</p>
+        </div>
+
+        <button type="submit">Proceed to Pay</button>
+      </form>
+
+    </div>
+  </div>
+
+  <footer>
+    <h3>Contact Us</h3>
+    <p>Email: farhanmohd21@gmail.com</p>
+    <p>Phone: 9972664624</p>
+    <p>&copy; 2025 Hope Foundation. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const paymentSelect = document.querySelector('select[name="payment_method"]');
+    const upiSection = document.getElementById('upiSection');
+    const cardSection = document.getElementById('cardSection');
+    const bankSection = document.getElementById('bankSection');
+
+    paymentSelect.addEventListener('change', function() {
+      upiSection.style.display = 'none';
+      bankSection.style.display = 'none';
+
+      if (this.value === 'upi') upiSection.style.display = 'block';
+      if (this.value === 'bank') bankSection.style.display = 'block';
+    });
+
+    function validateForm(event) {
+      event.preventDefault();
+      const form = event.target;
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const amount = parseFloat(form.amount.value);
+      const method = form.payment_method.value;
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address");
+        return false;
+      }
+
+      // Amount validation
+      if (amount < 100 || amount > 1000000) {
+        alert("Donation amount must be between ₹100 and ₹10,00,000");
+        return false;
+      }
+
+      // Process payment
+      processPayment(name, email, amount, method);
+      return false;
+    }
+
+    function processPayment(name, email, amount, method) {
+      try {
+        // Payment processing simulation
+        console.log("Processing payment:", { name, email, amount, method });
+        alert("Thank you for your donation! Your payment is being processed.");
+        document.querySelector('.payment-form').reset();
+      } catch (error) {
+        console.error("Payment processing error:", error);
+        alert("There was an error processing your payment. Please try again.");
+      }
+    }
+  </script>
+</body>
+</html>
